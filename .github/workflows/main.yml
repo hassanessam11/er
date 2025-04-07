@@ -26,9 +26,11 @@ jobs:
         sudo apt-get install -y openjdk-8-jdk wget unzip
         wget https://dl.google.com/android/repository/commandlinetools-linux-7302050_latest.zip
         unzip commandlinetools-linux-7302050_latest.zip -d $HOME/android-sdk
-        # No need to move cmdline-tools, just use it directly
-        echo y | $HOME/android-sdk/cmdline-tools/bin/sdkmanager --licenses
-        $HOME/android-sdk/cmdline-tools/bin/sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30"
+        # Explicitly define the SDK root directory
+        export ANDROID_HOME=$HOME/android-sdk
+        export PATH=$PATH:$ANDROID_HOME/cmdline-tools/bin:$ANDROID_HOME/platform-tools
+        echo y | $ANDROID_HOME/cmdline-tools/bin/sdkmanager --licenses
+        $ANDROID_HOME/cmdline-tools/bin/sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30"
 
     - name: Build APK
       run: ./gradlew assembleRelease
